@@ -1,6 +1,7 @@
 # data-validation-framework
+This sample code is intended for use in large scale data migrations to Google Cloud (specifically, BigQuery). The solution offers a reusable and scalable way to validate a large number of tables, as well as automated solutions for validating extremely large tables with minimal manual intervention.
 
-## Steps to implement frameowrk in your GCP project:
+## Steps to implement framework in your GCP project:
 
 1. Fork source code from GitHub
 2. Create Cloud Build trigger (point to cloudbuild.yaml file in repo) to deploy Docker images to Artifact Registry

@@ -197,7 +197,7 @@ def execute_dvt():
     print('Executing DVT')
 
     print('reading CSV from GCS file')
-    df = pd.read_csv('gs://dvt_configs/dvt_executions.csv')
+    df = pd.read_csv('gs://dvt_configs-sachinwvproj21/dvt_executions.csv')
     for index, row in df.iterrows():
 
         if row['validation_type'] == 'column':

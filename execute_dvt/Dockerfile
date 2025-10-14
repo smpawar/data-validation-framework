@@ -22,6 +22,7 @@ RUN pip install Flask gunicorn
 RUN pip install --upgrade google-pso-data-validator
 RUN pip install gcsfs
 RUN pip install python-dotenv
+RUN pip install oracledb
 
 # Install google cloud SDK
 RUN apt-get update && apt-get install -y apt-transport-https ca-certificates gnupg curl && \

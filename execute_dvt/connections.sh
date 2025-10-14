@@ -33,11 +33,11 @@ set -e
 echo "Create Oracle and PG connections"
 # bqcommand="data-validation connections add --connection-name bq_conn BigQuery --project-id $1"
 
-oracommand ="data-validation connections add --connection-name ORA19C3 Oracle   --user hr --password hr --host ora19c3 --port 1521 --database PROD1"
+oracommand="data-validation connections add --connection-name ORA19C3 Oracle  --user hr --password hr --host ora19c3 --port 1521 --database PROD1"
 echo $oracommand
 eval $oracommand
 
-pgcommand = "data-validation connections add --connection-name hr Postgres --host 146.148.94.56 --port 5432 --user postgres --password Oracle12! --database hr"
+pgcommand="data-validation connections add --connection-name hr Postgres --host 146.148.94.56 --port 5432 --user postgres --password Oracle12! --database hr"
 echo $pgcommand
 eval $pgcommand
 

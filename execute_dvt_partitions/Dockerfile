@@ -30,6 +30,7 @@ RUN apt-get update && apt-get install -y apt-transport-https ca-certificates gnu
 
 # Teradata Dependencies
 RUN pip install teradatasql
+RUN pip install oracledb
 
 # Hive/Impala Dependencies 
 # RUN pip install hdfs

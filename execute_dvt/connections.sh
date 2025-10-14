@@ -15,7 +15,7 @@ set -e
 # pguser=${echo $PG_USER}
 # pgpw=${echo $PG_PASSWORD}
 
-# orahost=${echo $ORA_HOST}
+orahost=${echo $ORA_HOST}
 # oraport=${echo $ORA_PORT}
 # orauser=${echo $ORA_USER}
 # orapw=${echo $ORA_PASSWORD}
@@ -33,7 +33,7 @@ set -e
 echo "Create Oracle and PG connections"
 # bqcommand="data-validation connections add --connection-name bq_conn BigQuery --project-id $1"
 
-oracommand="data-validation connections add --connection-name ORA19C3 Oracle  --user hr --password hr --host ora19c3 --port 1521 --database PROD1"
+oracommand="data-validation connections add --connection-name ORA19C3 Oracle  --user hr --password hr --host ${orahost} --port 1521 --database PROD1"
 echo $oracommand
 eval $oracommand
 

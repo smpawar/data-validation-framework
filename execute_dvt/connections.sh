@@ -37,7 +37,7 @@ oracommand ="data-validation connections add --connection-name ORA19C3 Oracle   
 echo $oracommand
 eval $oracommand
 
-pgcommand = "data-validation connections add --connection-name hr Postgres --host 127.0.0.1 --port 5443 --user hr --password hr --database hr"
+pgcommand = "data-validation connections add --connection-name hr Postgres --host 146.148.94.56 --port 5432 --user postgres --password Oracle12! --database hr"
 echo $pgcommand
 eval $pgcommand
 

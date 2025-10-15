@@ -36,23 +36,38 @@ RUN pip install oracledb
 # RUN pip install hdfs
 # RUN pip install thrift-sasl
 
-# Oracle Dependencies
-# if you are using Oracle you should add .rpm files
-# under your license to a directory called oracle/
-# and then uncomment the setup below.
+# --- Oracle Dependencies ---
+# The following steps install the Oracle Instant Client, which is required
+# for the Python cx_Oracle library to connect to an Oracle database.
 
-# ENV ORACLE_SID oracle
-# ENV ORACLE_ODBC_VERSION 12.2
-# ENV ORACLE_HOME /usr/lib/oracle/${ORACLE_ODBC_VERSION}/client64
+# 1. Set Environment Variables for Oracle
+# These tell the system where to find Oracle's files once installed.
+# Make sure the version matches the RPMs you downloaded.
+ENV ORACLE_ODBC_VERSION 12.2
+ENV ORACLE_HOME /usr/lib/oracle/${ORACLE_ODBC_VERSION}/client64
+ENV LD_LIBRARY_PATH $ORACLE_HOME/lib
 
-# RUN pip install cx_Oracle
-# RUN apt-get -y install --fix-missing --upgrade vim alien unixodbc-dev wget libaio1 libaio-dev
+# 2. Install the Python driver and system tools
+# - cx_Oracle: The Python library for connecting to Oracle.
+# - alien: A critical tool that converts Red Hat packages (.rpm) to Debian packages (.deb) so they can be installed.
+# - libaio1: A required library for the Oracle client.
+RUN pip install cx_Oracle && \
+    apt-get update && \
+    apt-get install -y alien libaio1
 
-# COPY oracle/*.rpm ./
-# RUN alien -i *.rpm && rm *.rpm \
-#     && echo "/usr/lib/oracle/${ORACLE_ODBC_VERSION}/client64/lib/" > /etc/ld.so.conf.d/oracle.conf \
-#     && ln -s /usr/include/oracle/${ORACLE_ODBC_VERSION}/client64 $ORACLE_HOME/include \
-#     && ldconfig -v
+# 3. Copy and install the Oracle RPMs you downloaded
+# This takes the .rpm files from your local 'oracle' folder,
+# copies them into the container, installs them using 'alien',
+# and then cleans up the leftover .rpm files.
+COPY oracle/*.rpm ./
+RUN alien -i --scripts *.rpm && rm *.rpm
+
+# 4. Configure the dynamic linker
+# This tells the operating system where to find the Oracle libraries
+# so that applications (like Python) can use them.
+RUN echo $ORACLE_HOME/lib > /etc/ld.so.conf.d/oracle.conf && \
+    ldconfig
+# --- End of Oracle Dependencies ---
 
 # UNCOMMENT TO RUN AS SERVICE
 # Run the web service on container startup. Here we use the gunicorn

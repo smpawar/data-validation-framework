@@ -54,7 +54,7 @@ ENV LD_LIBRARY_PATH $ORACLE_HOME/lib
 # - cx_Oracle: The Python library for connecting to Oracle.
 # - alien: A critical tool that converts Red Hat packages (.rpm) to Debian packages (.deb) so they can be installed.
 # - libaio1: A required library for the Oracle client.
-RUN pip install cx_Oracle && \
+RUN pip install oracledb && \
     apt-get update && \
     apt-get install -y alien libaio1
 

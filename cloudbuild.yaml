@@ -1,27 +1,34 @@
 steps:
-  # Step 1: Download Oracle RPMs from GCS into a temporary 'oracle' directory
+  # Step 1: Create the 'oracle' directory
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args: ['-c', 'mkdir -p oracle']
+    id: make-oracle-dir
+
+  # Step 2: Download Oracle RPMs from GCS into the new directory
   - name: 'gcr.io/cloud-builders/gsutil'
     args: ['cp', 'gs://oracle-rpms-sachinwvproj21/*.rpm', 'oracle/']
     id: download-oracle-rpms
+    waitFor: ['make-oracle-dir']
 
-  # Step 2: Build the first Docker image (it will now find the oracle/ directory)
+  # Step 3: Build the first Docker image
   - name: gcr.io/cloud-builders/docker
     args: ['build', '-t', 'us-central1-docker.pkg.dev/${PROJECT_ID}/dvt-in-cloud-run/dvt-cloud-run-execute', '.', '-f', 'execute_dvt/Dockerfile']
     id: build-dvt-execute
-    waitFor: ['download-oracle-rpms'] # Wait for the download to finish
+    waitFor: ['download-oracle-rpms']
 
-  # Step 3: Push the first image
+  # Step 4: Push the first image
   - name: gcr.io/cloud-builders/docker
     args: ['push', 'us-central1-docker.pkg.dev/${PROJECT_ID}/dvt-in-cloud-run/dvt-cloud-run-execute']
     id: push-dvt-execute
 
-  # Step 4: Build the second Docker image
+  # Step 5: Build the second Docker image
   - name: gcr.io/cloud-builders/docker
     args: ['build', '-t', 'us-central1-docker.pkg.dev/${PROJECT_ID}/dvt-in-cloud-run/dvt-cloud-run-partition-execute', '.', '-f', 'execute_dvt_partitions/Dockerfile']
     id: build-dvt-partition
-    waitFor: ['download-oracle-rpms'] # Also wait for the download
+    waitFor: ['download-oracle-rpms']
 
-  # Step 5: Push the second image
+  # Step 6: Push the second image
   - name: gcr.io/cloud-builders/docker
     args: ['push', 'us-central1-docker.pkg.dev/${PROJECT_ID}/dvt-in-cloud-run/dvt-cloud-run-partition-execute']
     id: push-dvt-partition

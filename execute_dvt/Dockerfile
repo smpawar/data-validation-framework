@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM python:3.9-slim-bullseye
 
 # Allow statements and log messages to immediately appear in the Knative logs
 ENV PYTHONUNBUFFERED True
@@ -29,7 +29,8 @@ RUN apt-get update && apt-get install -y apt-transport-https ca-certificates gnu
     curl -sS https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" > /etc/apt/sources.list.d/google-cloud-sdk.list && \
     apt-get update -y && \
-    apt-get install google-cloud-sdk -y
+    apt-get install google-cloud-sdk -y && \
+    apt-get install -y wget unzip libaio1
 
 # Teradata Dependencies
 RUN pip install teradatasql

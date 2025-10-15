@@ -1,6 +1,14 @@
 import subprocess
 from flask import Flask
 import os
+import oracledb
+
+# Initialize Oracle Thick Mode for advanced security features like NNE
+try:
+    oracledb.init_oracle_client()
+except Exception as e:
+    print("Error initializing Oracle thick mode:", e)
+
 from google.cloud import secretmanager
 from google.cloud import storage
 from google.cloud import bigquery

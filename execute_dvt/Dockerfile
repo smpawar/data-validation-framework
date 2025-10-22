@@ -68,7 +68,7 @@ RUN alien -i --scripts *.rpm && rm *.rpm
 # 4. Configure the dynamic linker
 # This tells the operating system where to find the Oracle libraries
 # so that applications (like Python) can use them.
-RUN echo $ORACLE_HOME/lib > /etc/ld.so.conf.d/oracle.conf && \
+RUN find /usr/lib/oracle -name "libclntsh.so*" -exec dirname {} \; | tee /etc/ld.so.conf.d/oracle.conf && \
     ldconfig
 # --- End of Oracle Dependencies ---
 

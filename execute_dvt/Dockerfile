@@ -33,7 +33,7 @@ RUN apt-get update && apt-get install -y apt-transport-https ca-certificates gnu
     apt-get install -y wget unzip libaio1
 
 # Teradata Dependencies
-RUN pip install teradatasql
+# RUN pip install teradatasql
 
 # Hive/Impala Dependencies 
 # RUN pip install hdfs

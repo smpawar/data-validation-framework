@@ -32,12 +32,7 @@ RUN apt-get update && apt-get install -y apt-transport-https ca-certificates gnu
     apt-get install google-cloud-sdk -y && \
     apt-get install -y wget unzip libaio1
 
-# Teradata Dependencies
-# RUN pip install teradatasql
 
-# Hive/Impala Dependencies 
-# RUN pip install hdfs
-# RUN pip install thrift-sasl
 
 # --- Oracle Dependencies ---
 # The following steps install the Oracle Instant Client, which is required
@@ -64,15 +59,6 @@ RUN echo $ORACLE_HOME > /etc/ld.so.conf.d/oracle.conf && \
 # Return to the app directory
 WORKDIR $APP_HOME
 # --- End of Oracle Dependencies ---
-
-
-# UNCOMMENT TO RUN AS SERVICE
-# Run the web service on container startup. Here we use the gunicorn
-# webserver, with one worker process and 8 threads.
-# For environments with multiple CPU cores, increase the number of workers
-# to be equal to the cores available.
-# Timeout is set to 0 to disable the timeouts of the workers to allow Cloud Run to handle instance scaling.
-# CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 dvt_main:app
 
 # UNCOMMENT TO RUN AS JOB
 CMD ["python", "dvt_main.py"]

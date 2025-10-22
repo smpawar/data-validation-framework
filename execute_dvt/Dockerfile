@@ -56,8 +56,17 @@ RUN mkdir -p $ORACLE_HOME && \
     mv instantclient_21_12/* . && \
     rmdir instantclient_21_12
 
-# 3. Configure the dynamic linker
-RUN echo $ORACLE_HOME > /etc/ld.so.conf.d/oracle.conf && \
+# 3. Copy and install the Oracle RPMs you downloaded
+# This takes the .rpm files from your local 'oracle' folder,
+# copies them into the container, installs them using 'alien',
+# and then cleans up the leftover .rpm files.
+COPY oracle/*.rpm ./
+RUN alien -i --scripts *.rpm && rm *.rpm
+
+# 4. Configure the dynamic linker
+# This tells the operating system where to find the Oracle libraries
+# so that applications (like Python) can use them.
+RUN find /usr/lib/oracle -name "libclntsh.so*" -exec dirname {} \; | tee /etc/ld.so.conf.d/oracle.conf && \
     ldconfig
 
 # Return to the app directory

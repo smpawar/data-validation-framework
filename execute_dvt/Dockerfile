@@ -41,22 +41,20 @@ RUN pip install teradatasql
 
 # --- Oracle Dependencies ---
 # The following steps install the Oracle Instant Client, which is required
-# for the Python cx_Oracle library to connect to an Oracle database.
+# for python-oracledb thick mode.
 
-# 1. Set Environment Variables for Oracle
-# These tell the system where to find Oracle's files once installed.
-# Make sure the version matches the RPMs you downloaded.
-ENV ORACLE_ODBC_VERSION 12.2
-ENV ORACLE_HOME /usr/lib/oracle/${ORACLE_ODBC_VERSION}/client64
-ENV LD_LIBRARY_PATH $ORACLE_HOME/lib
+# 1. Set the Oracle home directory
+ENV ORACLE_HOME=/opt/oracle/instantclient_21_12
+ENV LD_LIBRARY_PATH=$ORACLE_HOME
 
-# 2. Install the Python driver and system tools
-# - cx_Oracle: The Python library for connecting to Oracle.
-# - alien: A critical tool that converts Red Hat packages (.rpm) to Debian packages (.deb) so they can be installed.
-# - libaio1: A required library for the Oracle client.
-RUN pip install oracledb && \
-    apt-get update && \
-    apt-get install -y alien libaio1
+# 2. Download and unzip the Oracle Instant Client
+RUN mkdir -p $ORACLE_HOME && \
+    cd $ORACLE_HOME && \
+    wget https://download.oracle.com/otn_software/linux/instantclient/2112000/instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip && \
+    unzip instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip && \
+    rm instantclient-basiclite-linux.x64-21.12.0.0.0dbru.zip && \
+    mv instantclient_21_12/* . && \
+    rmdir instantclient_21_12
 
 # 3. Copy and install the Oracle RPMs you downloaded
 # This takes the .rpm files from your local 'oracle' folder,
@@ -70,6 +68,9 @@ RUN alien -i --scripts *.rpm && rm *.rpm
 # so that applications (like Python) can use them.
 RUN find /usr/lib/oracle -name "libclntsh.so*" -exec dirname {} \; | tee /etc/ld.so.conf.d/oracle.conf && \
     ldconfig
+
+# Return to the app directory
+WORKDIR $APP_HOME
 # --- End of Oracle Dependencies ---
 
 
